@@ -10,7 +10,9 @@ DAISIE_sim_core <- function(time,mainland_n,pars,nonoceanic)
   frac_area <- nonoceanic[1]
   frac_nonend <- nonoceanic[2]
   
-  timeval <- 0
+  if (!is.null(Apars) && island_ontogeny == "const") {
+    stop("Apars specified for constant island_ontogeny. Set Apars to NULL.")
+  }
   
   mainland_spec <- seq(1,mainland_n,1)
   maxspecID <- mainland_n
@@ -239,68 +241,7 @@ DAISIE_sim_update_state <- function(possible_event,maxspecID,mainland_spec,islan
         }
     island_spec = rbind(island_spec)	
   }
-  
-  ##########################################
-  #ANAGENESIS
-  if(possible_event == 3)
-  {    
-    immi_specs = which(island_spec[,4] == "I")
-    
-    #we only allow immigrants to undergo anagenesis
-    if(length(immi_specs) == 1)
-    {
-      anagenesis = immi_specs
-    } else if(length(immi_specs) > 1)
-    {
-      anagenesis = DDD::sample2(immi_specs,1)
-    }
-    
-    maxspecID = maxspecID + 1
-    island_spec[anagenesis,4] = "A"
-    island_spec[anagenesis,1] = maxspecID
-    island_spec[anagenesis,7] = "Immig_parent"
-  }
-  
-  ##########################################
-  #CLADOGENESIS - this splits species into two new species - both of which receive 
-  if(possible_event == 4)
-  { 		
-    tosplit = DDD::sample2(1:length(island_spec[,1]),1)
-    
-    #if the species that speciates is cladogenetic
-    if(island_spec[tosplit,4] == "C")
-    {
-      #for daughter A
-      
-      island_spec[tosplit,4] = "C"
-      island_spec[tosplit,1] = maxspecID + 1
-      oldstatus = island_spec[tosplit,5]
-      island_spec[tosplit,5] = paste(oldstatus,"A",sep = "")
-      #island_spec[tosplit,6] = timeval
-      island_spec[tosplit,7] = NA
-      
-      #for daughter B
-      island_spec = rbind(island_spec,c(maxspecID + 2,island_spec[tosplit,2],island_spec[tosplit,3],
-                                        "C",paste(oldstatus,"B",sep = ""),timeval,NA))
-      
-      maxspecID = maxspecID + 2
-    } else {
-      #if the species that speciates is not cladogenetic
-      
-      #for daughter A
-      
-      island_spec[tosplit,4] = "C"
-      island_spec[tosplit,1] = maxspecID + 1
-      island_spec[tosplit,5] = "A"
-      island_spec[tosplit,6] = island_spec[tosplit,3]
-      island_spec[tosplit,7] = NA
-      
-      #for daughter B
-      island_spec = rbind(island_spec,c(maxspecID + 2,island_spec[tosplit,2],island_spec[tosplit,3],"C","B",timeval,NA))
-      
-      maxspecID = maxspecID + 2
-    }
-  }
+ 
   return(list(island_spec = island_spec,maxspecID = maxspecID))
 }
 
@@ -403,3 +344,4 @@ DAISIE_ONEcolonist <- function(time,island_spec,stt_table,nonend_spec,end_spec)
   }
   return(descendants)
 }
+
