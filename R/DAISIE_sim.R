@@ -257,27 +257,16 @@
 #' @export DAISIE_sim
 
 DAISIE_sim = function(
-  
   time,
-  
   M,
-  
   pars,
-  
   replicates,
-  
   nonoceanic,
-  
   divdepmodel = 'CS',
-  
   prop_type2_pool = NA,
-  
   replicates_apply_type2 = TRUE,
-  
   sample_freq = 25,
-  
   plot_sims = TRUE,
-  
   ...) 
 
 {
