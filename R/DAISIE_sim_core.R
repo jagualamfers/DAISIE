@@ -1,30 +1,16 @@
 DAISIE_sim_core <- function(time,mainland_n,pars,nonoceanic)
-  
 {
-  
   totaltime <- time
-  
   lac <- pars[1]
-  
   mu <- pars[2]
-  
   K <- pars[3]
-  
   gam <- pars[4]
-  
   laa <- pars[5]
-  
   mu_K <- mu*K
-  
   frac_area <- nonoceanic[1]
-  
   frac_nonend <- nonoceanic[2]
   
-  
-  
   timeval <- 0
-  
-  
   
   mainland_spec <- seq(1,mainland_n,1)
   
